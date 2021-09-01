@@ -1,0 +1,36 @@
+command /tnt [<text>]:
+	trigger:
+		if player is op:
+			if arg 1 is not set:
+				send "&c타입을 적어주세요."
+				stop
+			if arg 1 is "start":
+				set {TNT} to 60
+				send "&a게임이 시작되었습니다."
+				stop
+
+			if arg 1 is "pause":
+				set {Pause} to true
+				send "&6게임이 중지되었습니다."
+				stop
+
+			if arg 1 is "unpause":
+				delete {Pause}
+				send "&a게임이 다시 시작되었습니다."
+				stop
+
+			if arg 1 is "reset":
+				delete {Pause}
+				set {TNT} to 60
+				send "&b게임이 초기화되었습니다."
+				stop
+				
+every 1 seconds:
+	if {Pause} is not set:
+		if {TNT} > 0:
+			subtract 1 from {TNT}
+			if {TNT} is 0:
+				loop all players:
+					spawn 1 tnt at loop-player's location
+					play sound "entity.tnt.primed" to loop-player
+					set {TNT} to 60
